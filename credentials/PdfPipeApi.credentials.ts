@@ -1,5 +1,6 @@
 import {
   IAuthenticateGeneric,
+  ICredentialTestRequest,
   ICredentialType,
   INodeProperties,
 } from 'n8n-workflow';
@@ -29,6 +30,13 @@ export class PdfPipeApi implements ICredentialType {
       headers: {
         Authorization: '=Bearer {{$credentials.apiKey}}',
       },
+    },
+  };
+
+  test: ICredentialTestRequest = {
+    request: {
+      baseURL: 'https://api.pdfpipe.xyz',
+      url: '/v1/me',
     },
   };
 }
