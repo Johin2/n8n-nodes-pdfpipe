@@ -1,0 +1,47 @@
+{
+  "name": "n8n-nodes-pdfpipe",
+  "version": "0.1.1",
+  "description": "n8n community node to generate PDFs from HTML or a URL with the PDFPipe API.",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "pdf",
+    "html-to-pdf",
+    "pdfpipe"
+  ],
+  "license": "MIT",
+  "homepage": "https://pdfpipe.xyz",
+  "author": "johinjohny144@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Johin2/n8n-nodes-pdfpipe.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && node copy-icons.mjs"
+  },
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/PdfPipeApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/PdfPipe/PdfPipe.node.js"
+    ]
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "n8n-workflow": "^1.70.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18.10"
+  }
+}

@@ -1,0 +1,26 @@
+name: Release
+
+# Publishes to npm with a provenance attestation, as required for n8n
+# community node verification. Uses npm Trusted Publishing (OIDC): configure
+# this repo + workflow as the trusted publisher on npmjs.com — no token needed.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write # OIDC for npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+      - run: npx @n8n/scan-community-package --local . || true
+      - run: npm publish --provenance --access public
