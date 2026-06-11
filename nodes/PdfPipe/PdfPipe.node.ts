@@ -3,8 +3,9 @@ import {
   INodeExecutionData,
   INodeType,
   INodeTypeDescription,
+  JsonObject,
+  NodeApiError,
   NodeConnectionType,
-  NodeOperationError,
 } from 'n8n-workflow';
 
 export class PdfPipe implements INodeType {
@@ -179,7 +180,7 @@ export class PdfPipe implements INodeType {
           });
           continue;
         }
-        throw new NodeOperationError(this.getNode(), error as Error, { itemIndex: i });
+        throw new NodeApiError(this.getNode(), error as JsonObject, { itemIndex: i });
       }
     }
 
