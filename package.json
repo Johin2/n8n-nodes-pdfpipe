@@ -40,7 +40,7 @@
     "n8n-workflow": "*"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^25.9.3",
     "n8n-workflow": "^1.70.0",
     "typescript": "^5.6.0"
   },
