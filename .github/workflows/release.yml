@@ -6,6 +6,7 @@ name: Release
 on:
   release:
     types: [published]
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -20,6 +21,8 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
+      # Trusted Publishing (OIDC) needs npm >= 11.5; runners ship npm 10.
+      - run: npm install -g npm@latest
       - run: npm ci
       - run: npm run build
       - run: npx @n8n/scan-community-package --local . || true
