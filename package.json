@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-pdfpipe",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "n8n community node to generate PDFs from HTML or a URL with the PDFPipe API.",
   "keywords": [
     "n8n-community-node-package",
@@ -11,7 +11,10 @@
   ],
   "license": "MIT",
   "homepage": "https://pdfpipe.xyz",
-  "author": "johinjohny144@gmail.com",
+  "author": {
+    "name": "Johin Johny",
+    "email": "johinjohny144@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Johin2/n8n-nodes-pdfpipe.git"
