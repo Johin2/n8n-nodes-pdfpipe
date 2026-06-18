@@ -1,12 +1,13 @@
 {
   "name": "n8n-nodes-pdfpipe",
-  "version": "0.1.6",
-  "description": "n8n community node to generate PDFs from HTML or a URL with the PDFPipe API.",
+  "version": "1.1.4",
+  "description": "n8n community node for PDFPipe: render HTML or URLs to pixel-perfect PDFs, batch render, and manage stored documents.",
   "keywords": [
     "n8n-community-node-package",
     "n8n",
     "pdf",
     "html-to-pdf",
+    "url-to-pdf",
     "pdfpipe"
   ],
   "license": "MIT",
@@ -30,10 +31,10 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/PdfPipeApi.credentials.js"
+      "dist/credentials/PDFPipeApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/PdfPipe/PdfPipe.node.js"
+      "dist/nodes/PDFPipe/PDFPipe.node.js"
     ]
   },
   "peerDependencies": {

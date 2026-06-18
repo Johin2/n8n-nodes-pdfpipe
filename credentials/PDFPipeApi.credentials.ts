@@ -1,17 +1,14 @@
-import {
+import type {
   IAuthenticateGeneric,
   ICredentialTestRequest,
   ICredentialType,
   INodeProperties,
 } from 'n8n-workflow';
 
-export class PdfPipeApi implements ICredentialType {
+export class PDFPipeApi implements ICredentialType {
   name = 'pdfPipeApi';
-
   displayName = 'PDFPipe API';
-
   documentationUrl = 'https://pdfpipe.xyz/docs';
-
   properties: INodeProperties[] = [
     {
       displayName: 'API Key',
@@ -20,19 +17,15 @@ export class PdfPipeApi implements ICredentialType {
       typeOptions: { password: true },
       default: '',
       required: true,
-      description: 'Your PDFPipe API key. It looks like pp_live_...',
+      description: 'Your PDFPipe API key (starts with pp_live_)',
     },
   ];
-
   authenticate: IAuthenticateGeneric = {
     type: 'generic',
     properties: {
-      headers: {
-        Authorization: '=Bearer {{$credentials.apiKey}}',
-      },
+      headers: { Authorization: '=Bearer {{$credentials.apiKey}}' },
     },
   };
-
   test: ICredentialTestRequest = {
     request: {
       baseURL: 'https://api.pdfpipe.xyz',

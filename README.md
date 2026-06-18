@@ -1,32 +1,39 @@
 # n8n-nodes-pdfpipe
 
-An [n8n](https://n8n.io) community node that generates a PDF from HTML or a URL using the [PDFPipe](https://pdfpipe.xyz) API. Real Chromium rendering, flat pricing, 500 free documents a month.
+Community n8n node for [PDFPipe](https://pdfpipe.xyz), the HTML-to-PDF API.
 
 ## Installation
 
-In n8n, go to **Settings → Community Nodes → Install** and enter:
+In your n8n instance, go to **Settings > Community Nodes** and install:
 
 ```
 n8n-nodes-pdfpipe
 ```
 
+Or install manually via npm in the n8n data directory:
+
+```bash
+npm install n8n-nodes-pdfpipe
+```
+
 ## Credentials
 
-Create a **PDFPipe API** credential and paste your API key (looks like `pp_live_...`). Get one at [pdfpipe.xyz](https://pdfpipe.xyz).
+Create a **PDFPipe API** credential with your API key. Keys start with `pp_live_` and can be found in your [PDFPipe dashboard](https://pdfpipe.xyz/dashboard).
 
-## Node: PDFPipe
+## Operations
 
-The node takes HTML or a URL and outputs the rendered PDF as binary data you can attach to an email, upload, or save.
+| Operation | Description |
+|-----------|-------------|
+| Render HTML | Convert an HTML string to a PDF file |
+| Render URL | Convert a web page URL to a PDF file |
+| Batch Render | Render multiple HTML or URL items in one request |
+| Get Document | Retrieve a stored PDF document by ID |
+| List Documents | List all stored PDF documents |
+| Check Usage | Check current usage and plan limits |
 
-- **Source**: HTML or URL
-- **HTML / URL**: the content to render
-- **Output Binary Field**: which binary property to store the PDF in (default `data`)
-- **File Name**: the PDF file name (default `document.pdf`)
-- **Options**: format (A4, Letter, etc.), landscape, margin, print background, scale, timeout
+## Documentation
 
-### Example
-
-Trigger → **PDFPipe** (Source: HTML, HTML: `<h1>Invoice #{{$json.orderId}}</h1>`) → **Send Email** (attach the binary `data`).
+Full API reference: [pdfpipe.xyz/docs](https://pdfpipe.xyz/docs)
 
 ## License
 
