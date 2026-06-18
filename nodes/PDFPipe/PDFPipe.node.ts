@@ -323,9 +323,6 @@ export class PDFPipe implements INodeType {
     const items = this.getInputData();
     const returnData: INodeExecutionData[] = [];
 
-    const credentials = await this.getCredentials('pdfPipeApi');
-    const apiKey = credentials.apiKey as string;
-
     for (let i = 0; i < items.length; i++) {
       const operation = this.getNodeParameter('operation', i) as string;
 
@@ -380,11 +377,10 @@ export class PDFPipe implements INodeType {
         if (store) {
           let jsonResponse: IDataObject;
           try {
-            jsonResponse = await this.helpers.httpRequest({
+            jsonResponse = await this.helpers.httpRequestWithAuthentication.call(this, 'pdfPipeApi', {
               method: 'POST',
               url: `${API_BASE}/v1/pdf`,
               headers: {
-                Authorization: `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
               },
               body,
@@ -397,11 +393,10 @@ export class PDFPipe implements INodeType {
         } else {
           let response: ArrayBuffer;
           try {
-            response = await this.helpers.httpRequest({
+            response = await this.helpers.httpRequestWithAuthentication.call(this, 'pdfPipeApi', {
               method: 'POST',
               url: `${API_BASE}/v1/pdf`,
               headers: {
-                Authorization: `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
               },
               body,
@@ -460,11 +455,10 @@ export class PDFPipe implements INodeType {
 
         let response: IDataObject;
         try {
-          response = await this.helpers.httpRequest({
+          response = await this.helpers.httpRequestWithAuthentication.call(this, 'pdfPipeApi', {
             method: 'POST',
             url: `${API_BASE}/v1/pdf/batch`,
             headers: {
-              Authorization: `Bearer ${apiKey}`,
               'Content-Type': 'application/json',
             },
             body,
@@ -487,10 +481,9 @@ export class PDFPipe implements INodeType {
 
         let response: ArrayBuffer;
         try {
-          response = await this.helpers.httpRequest({
+          response = await this.helpers.httpRequestWithAuthentication.call(this, 'pdfPipeApi', {
             method: 'GET',
             url: `${API_BASE}/v1/documents/${encodeURIComponent(documentId)}`,
-            headers: { Authorization: `Bearer ${apiKey}` },
             encoding: 'arraybuffer',
             returnFullResponse: false,
           }) as ArrayBuffer;
@@ -524,10 +517,9 @@ export class PDFPipe implements INodeType {
 
         let response: IDataObject;
         try {
-          response = await this.helpers.httpRequest({
+          response = await this.helpers.httpRequestWithAuthentication.call(this, 'pdfPipeApi', {
             method: 'GET',
             url: `${API_BASE}/v1/documents`,
-            headers: { Authorization: `Bearer ${apiKey}` },
             qs,
             json: true,
           }) as IDataObject;
@@ -539,10 +531,9 @@ export class PDFPipe implements INodeType {
       } else if (operation === 'checkUsage') {
         let response: IDataObject;
         try {
-          response = await this.helpers.httpRequest({
+          response = await this.helpers.httpRequestWithAuthentication.call(this, 'pdfPipeApi', {
             method: 'GET',
             url: `${API_BASE}/v1/me`,
-            headers: { Authorization: `Bearer ${apiKey}` },
             json: true,
           }) as IDataObject;
         } catch (err) {

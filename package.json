@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-pdfpipe",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "n8n community node for PDFPipe: render HTML or URLs to pixel-perfect PDFs, batch render, and manage stored documents.",
   "keywords": [
     "n8n-community-node-package",
