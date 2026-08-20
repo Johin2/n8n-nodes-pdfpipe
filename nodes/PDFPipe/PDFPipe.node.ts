@@ -123,6 +123,85 @@ const sharedRenderParams = [
     default: '',
     description: 'Password-protect the PDF (optional)',
   },
+  {
+    displayName: 'Scale',
+    name: 'scale',
+    type: 'number' as const,
+    typeOptions: { minValue: 0.1, maxValue: 2, numberPrecision: 2 },
+    default: 1,
+    description: 'Render scale, from 0.1 to 2. Use below 1 to fit wide tables onto the page',
+  },
+  {
+    displayName: 'Page Ranges',
+    name: 'page_ranges',
+    type: 'string' as const,
+    default: '',
+    placeholder: '1-3, 5',
+    description: 'Which pages to keep, e.g. "1-3, 5". Leave empty for all pages',
+  },
+  {
+    displayName: 'Prefer CSS Page Size',
+    name: 'prefer_css_page_size',
+    type: 'boolean' as const,
+    default: false,
+    description: 'Whether to honour the @page size and margins declared in the document CSS instead of the Format and Margin set here',
+  },
+  {
+    displayName: 'CSS Media Type',
+    name: 'media',
+    type: 'options' as const,
+    options: [
+      { name: 'Print', value: 'print' },
+      { name: 'Screen', value: 'screen' },
+    ],
+    default: 'print',
+    description: 'Which CSS media type to emulate. Choose Screen when a page hides content behind @media print',
+  },
+  {
+    displayName: 'Inject CSS',
+    name: 'inject_css',
+    type: 'string' as const,
+    typeOptions: { rows: 3 },
+    default: '',
+    description: 'Extra CSS applied after the page loads. Useful for hiding cookie banners or navigation when rendering a URL you do not control',
+  },
+  {
+    displayName: 'Wait Until',
+    name: 'wait_until',
+    type: 'options' as const,
+    options: [
+      { name: 'DOM Content Loaded', value: 'domcontentloaded' },
+      { name: 'Load', value: 'load' },
+      { name: 'Network Idle (0 Connections)', value: 'networkidle0' },
+      { name: 'Network Idle (2 Connections)', value: 'networkidle2' },
+    ],
+    default: 'networkidle0',
+    description: 'How long to wait before rendering. Lower settings are faster but may capture a page before its scripts finish',
+  },
+  {
+    displayName: 'Wait for Selector',
+    name: 'wait_for',
+    type: 'string' as const,
+    default: '',
+    placeholder: '#chart.loaded',
+    description: 'Wait for this CSS selector to appear before rendering. The render fails if it never appears within the timeout',
+  },
+  {
+    displayName: 'Extra Wait (Ms)',
+    name: 'wait_ms',
+    type: 'number' as const,
+    typeOptions: { minValue: 0, maxValue: 5000 },
+    default: 0,
+    description: 'Fixed extra delay before rendering, up to 5000 ms. Prefer Wait for Selector where possible',
+  },
+  {
+    displayName: 'Timeout (Ms)',
+    name: 'timeout_ms',
+    type: 'number' as const,
+    typeOptions: { minValue: 1000, maxValue: 60000 },
+    default: 30000,
+    description: 'How long a render may take before it is abandoned, from 1000 to 60000 ms. Raise it for heavy pages',
+  },
 ];
 
 export class PDFPipe implements INodeType {
@@ -357,6 +436,36 @@ export class PDFPipe implements INodeType {
 
         const password = this.getNodeParameter('password', i, '') as string;
         if (password) options.password = password;
+
+        // Only send what differs from the API default, so a workflow that never
+        // touched these fields keeps sending the exact body it sent before.
+        const scale = this.getNodeParameter('scale', i, 1) as number;
+        if (scale !== 1) options.scale = scale;
+
+        const pageRanges = this.getNodeParameter('page_ranges', i, '') as string;
+        if (pageRanges) options.page_ranges = pageRanges;
+
+        if (this.getNodeParameter('prefer_css_page_size', i, false) as boolean) {
+          options.prefer_css_page_size = true;
+        }
+
+        const media = this.getNodeParameter('media', i, 'print') as string;
+        if (media === 'screen') options.media = 'screen';
+
+        const injectCss = this.getNodeParameter('inject_css', i, '') as string;
+        if (injectCss) options.inject_css = injectCss;
+
+        const waitUntil = this.getNodeParameter('wait_until', i, 'networkidle0') as string;
+        if (waitUntil !== 'networkidle0') options.wait_until = waitUntil;
+
+        const waitFor = this.getNodeParameter('wait_for', i, '') as string;
+        if (waitFor) options.wait_for = waitFor;
+
+        const waitMs = this.getNodeParameter('wait_ms', i, 0) as number;
+        if (waitMs > 0) options.wait_ms = waitMs;
+
+        const timeoutMs = this.getNodeParameter('timeout_ms', i, 30000) as number;
+        if (timeoutMs !== 30000) options.timeout_ms = timeoutMs;
 
         const body: IDataObject = { options };
 
