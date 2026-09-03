@@ -129,7 +129,7 @@ const sharedRenderParams = [
     type: 'number' as const,
     typeOptions: { minValue: 0.1, maxValue: 2, numberPrecision: 2 },
     default: 1,
-    description: 'Render scale, from 0.1 to 2. Use below 1 to fit wide tables onto the page',
+    description: 'Render scale, from 0.1 to 2. Use below 1 to fit wide tables onto the page.',
   },
   {
     displayName: 'Page Ranges',
@@ -137,7 +137,7 @@ const sharedRenderParams = [
     type: 'string' as const,
     default: '',
     placeholder: '1-3, 5',
-    description: 'Which pages to keep, e.g. "1-3, 5". Leave empty for all pages',
+    description: 'Which pages to keep, e.g. "1-3, 5". Leave empty for all pages.',
   },
   {
     displayName: 'Prefer CSS Page Size',
@@ -155,7 +155,7 @@ const sharedRenderParams = [
       { name: 'Screen', value: 'screen' },
     ],
     default: 'print',
-    description: 'Which CSS media type to emulate. Choose Screen when a page hides content behind @media print',
+    description: 'Which CSS media type to emulate. Choose Screen when a page hides content behind @media print.',
   },
   {
     displayName: 'Inject CSS',
@@ -163,7 +163,7 @@ const sharedRenderParams = [
     type: 'string' as const,
     typeOptions: { rows: 3 },
     default: '',
-    description: 'Extra CSS applied after the page loads. Useful for hiding cookie banners or navigation when rendering a URL you do not control',
+    description: 'Extra CSS applied after the page loads. Useful for hiding cookie banners or navigation when rendering a URL you do not control.',
   },
   {
     displayName: 'Wait Until',
@@ -176,7 +176,7 @@ const sharedRenderParams = [
       { name: 'Network Idle (2 Connections)', value: 'networkidle2' },
     ],
     default: 'networkidle0',
-    description: 'How long to wait before rendering. Lower settings are faster but may capture a page before its scripts finish',
+    description: 'How long to wait before rendering. Lower settings are faster but may capture a page before its scripts finish.',
   },
   {
     displayName: 'Wait for Selector',
@@ -184,7 +184,7 @@ const sharedRenderParams = [
     type: 'string' as const,
     default: '',
     placeholder: '#chart.loaded',
-    description: 'Wait for this CSS selector to appear before rendering. The render fails if it never appears within the timeout',
+    description: 'Wait for this CSS selector to appear before rendering. The render fails if it never appears within the timeout.',
   },
   {
     displayName: 'Extra Wait (Ms)',
@@ -192,7 +192,7 @@ const sharedRenderParams = [
     type: 'number' as const,
     typeOptions: { minValue: 0, maxValue: 5000 },
     default: 0,
-    description: 'Fixed extra delay before rendering, up to 5000 ms. Prefer Wait for Selector where possible',
+    description: 'Fixed extra delay before rendering, up to 5000 ms. Prefer Wait for Selector where possible.',
   },
   {
     displayName: 'Timeout (Ms)',
@@ -200,7 +200,7 @@ const sharedRenderParams = [
     type: 'number' as const,
     typeOptions: { minValue: 1000, maxValue: 60000 },
     default: 30000,
-    description: 'How long a render may take before it is abandoned, from 1000 to 60000 ms. Raise it for heavy pages',
+    description: 'How long a render may take before it is abandoned, from 1000 to 60000 ms. Raise it for heavy pages.',
   },
 ];
 
