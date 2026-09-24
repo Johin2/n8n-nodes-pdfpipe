@@ -5,7 +5,7 @@ import type {
   INodeTypeDescription,
   IDataObject,
 } from 'n8n-workflow';
-import { NodeOperationError } from 'n8n-workflow';
+import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 const API_BASE = 'https://api.pdfpipe.xyz';
 
@@ -204,19 +204,19 @@ const sharedRenderParams = [
   },
 ];
 
-export class PDFPipe implements INodeType {
+export class PdfPipe implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'PDFPipe',
     name: 'pdfPipe',
-    // eslint-disable-next-line n8n-nodes-base/node-class-description-icon-not-svg
-    icon: 'file:pdfpipe.svg',
+    icon: { light: 'file:pdfpipe.svg', dark: 'file:pdfpipe.dark.svg' },
     group: ['transform'],
     version: 1,
     subtitle: '={{$parameter["operation"]}}',
     description: 'Render HTML or URLs to pixel-perfect PDFs using PDFPipe',
     defaults: { name: 'PDFPipe' },
-    inputs: ['main'],
-    outputs: ['main'],
+    usableAsTool: true,
+    inputs: [NodeConnectionTypes.Main],
+    outputs: [NodeConnectionTypes.Main],
     credentials: [
       {
         name: 'pdfPipeApi',
@@ -231,22 +231,16 @@ export class PDFPipe implements INodeType {
         noDataExpression: true,
         options: [
           {
-            name: 'Render HTML',
-            value: 'renderHtml',
-            description: 'Convert an HTML string to a PDF',
-            action: 'Render HTML to PDF',
-          },
-          {
-            name: 'Render URL',
-            value: 'renderUrl',
-            description: 'Convert a web page URL to a PDF',
-            action: 'Render URL to PDF',
-          },
-          {
             name: 'Batch Render',
             value: 'batchRender',
             description: 'Render multiple HTML or URL items in a single request',
             action: 'Batch render to PDF',
+          },
+          {
+            name: 'Check Usage',
+            value: 'checkUsage',
+            description: 'Check current usage and plan limits',
+            action: 'Check usage and plan',
           },
           {
             name: 'Get Document',
@@ -261,10 +255,16 @@ export class PDFPipe implements INodeType {
             action: 'List stored documents',
           },
           {
-            name: 'Check Usage',
-            value: 'checkUsage',
-            description: 'Check current usage and plan limits',
-            action: 'Check usage and plan',
+            name: 'Render HTML',
+            value: 'renderHtml',
+            description: 'Convert an HTML string to a PDF',
+            action: 'Render HTML to PDF',
+          },
+          {
+            name: 'Render URL',
+            value: 'renderUrl',
+            description: 'Convert a web page URL to a PDF',
+            action: 'Render URL to PDF',
           },
         ],
         default: 'renderHtml',
@@ -323,7 +323,7 @@ export class PDFPipe implements INodeType {
         default: '[]',
         required: true,
         description:
-          'Array of render request objects. Each item may have "html" or "url", an optional "filename", and an optional "options" object.',
+          'Array of render request objects. Each item may have an "html" or "url" key, an optional "filename", and an optional "options" object. The "url" key takes the page URL to render.',
         displayOptions: {
           show: { operation: ['batchRender'] },
         },
@@ -379,8 +379,8 @@ export class PDFPipe implements INodeType {
         name: 'limit',
         type: 'number',
         typeOptions: { minValue: 1, maxValue: 100 },
-        default: 20,
-        description: 'Maximum number of documents to return (max 100)',
+        default: 50,
+        description: 'Max number of results to return',
         displayOptions: {
           show: { operation: ['listDocuments'] },
         },
@@ -498,7 +498,7 @@ export class PDFPipe implements INodeType {
           } catch (err) {
             throw new NodeOperationError(this.getNode(), extractApiError(err), { itemIndex: i });
           }
-          returnData.push({ json: jsonResponse });
+          returnData.push({ json: jsonResponse, pairedItem: { item: i } });
         } else {
           let response: ArrayBuffer;
           try {
@@ -532,6 +532,7 @@ export class PDFPipe implements INodeType {
           returnData.push({
             binary: { data: binaryData },
             json: { filename: outputFilename },
+            pairedItem: { item: i },
           });
         }
       } else if (operation === 'batchRender') {
@@ -577,7 +578,7 @@ export class PDFPipe implements INodeType {
           throw new NodeOperationError(this.getNode(), extractApiError(err), { itemIndex: i });
         }
 
-        returnData.push({ json: response });
+        returnData.push({ json: response, pairedItem: { item: i } });
       } else if (operation === 'getDocument') {
         const documentId = this.getNodeParameter('documentId', i) as string;
 
@@ -613,6 +614,7 @@ export class PDFPipe implements INodeType {
         returnData.push({
           binary: { data: binaryData },
           json: { documentId },
+          pairedItem: { item: i },
         });
       } else if (operation === 'listDocuments') {
         const limit = this.getNodeParameter('limit', i, 20) as number;
@@ -636,7 +638,7 @@ export class PDFPipe implements INodeType {
           throw new NodeOperationError(this.getNode(), extractApiError(err), { itemIndex: i });
         }
 
-        returnData.push({ json: response });
+        returnData.push({ json: response, pairedItem: { item: i } });
       } else if (operation === 'checkUsage') {
         let response: IDataObject;
         try {
@@ -649,7 +651,7 @@ export class PDFPipe implements INodeType {
           throw new NodeOperationError(this.getNode(), extractApiError(err), { itemIndex: i });
         }
 
-        returnData.push({ json: response });
+        returnData.push({ json: response, pairedItem: { item: i } });
       } else {
         throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`, {
           itemIndex: i,

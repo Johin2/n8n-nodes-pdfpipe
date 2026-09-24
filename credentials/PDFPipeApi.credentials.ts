@@ -9,6 +9,7 @@ export class PDFPipeApi implements ICredentialType {
   name = 'pdfPipeApi';
   displayName = 'PDFPipe API';
   documentationUrl = 'https://pdfpipe.xyz/docs';
+  icon = { light: 'file:pdfpipe.svg', dark: 'file:pdfpipe.dark.svg' } as const;
   properties: INodeProperties[] = [
     {
       displayName: 'API Key',
