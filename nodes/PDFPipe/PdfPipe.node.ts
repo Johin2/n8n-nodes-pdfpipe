@@ -67,7 +67,12 @@ const sharedRenderParams = [
     type: 'string' as const,
     typeOptions: { rows: 3 },
     default: '',
-    description: 'HTML for a running page header. Use .pageNumber, .totalPages, .date, .title, .url class names for dynamic substitution.',
+    description: 'HTML for a running page header. Supports substitution classes for page number, total pages, date, title and document URL.',
+    // The exact class names live in the hint rather than the description: they
+    // are lowercase literals, and n8n-nodes-base/node-param-description-miscased-url
+    // rewrites a bare "url" in a description to "URL", which would document a
+    // class that does not exist.
+    hint: 'Class names: pageNumber, totalPages, date, title, url',
   },
   {
     displayName: 'Footer HTML',
@@ -323,7 +328,10 @@ export class PdfPipe implements INodeType {
         default: '[]',
         required: true,
         description:
-          'Array of render request objects. Each item may have an "html" or "url" key, an optional "filename", and an optional "options" object. The "url" key takes the page URL to render.',
+          'Array of render request objects. Each item supplies either HTML content or a page URL, plus an optional filename and an optional options object.',
+        // The literal field names are lowercase, and the description linter
+        // uppercases a bare "url", so the exact keys are shown here instead.
+        placeholder: '[{"url": "https://example.com", "filename": "page.pdf"}]',
         displayOptions: {
           show: { operation: ['batchRender'] },
         },
